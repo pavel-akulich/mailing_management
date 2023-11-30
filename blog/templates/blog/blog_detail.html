@@ -1,0 +1,34 @@
+{% extends 'home/base.html' %}
+{% block content %}
+    <div class="col-12">
+        <div class="row">
+
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Статья "{{ object.title }}"
+                        </h3>
+                    </div>
+                    <div class="card">
+                        {% if object.preview %}
+                        <img src="/media//{{ object.preview }}" class="card-img-top" alt="" height="400">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            {{ object.content }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        Просмотры: {{ object.views_count }}
+                    </div>
+                    <div class="card-footer">
+                        Опубликовано: {{ object.created_at }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

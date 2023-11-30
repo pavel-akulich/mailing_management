@@ -1,0 +1,36 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" action="" class="form-floating" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ form.title.id_for_label }}">Заголовок статьи</label><br/>
+                                {{ form.title }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.content.id_for_label }}">Содержание</label><br/>
+                                {{ form.content }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.preview.id_for_label }}">Превью статьи</label><br/>
+                                {{ form.preview }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                {% if object %}
+                                    Сохранить статью
+                                {% else %}
+                                    Создать статью
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
