@@ -115,23 +115,24 @@
         </ul>
     </div>
 
-    <div>
-        <h5>Кол-во наших рассылок: {{ all_messages |length }}</h5>
-        <h5>Кол-во активных рассылок: {{ active_messages |length }}</h5>
-        <h5>Кол-во клиентов для рассылок: {{ all_clients |length }}</h5>
+    <div class="styled-text">
+        <span>Наш сервис рассылает столько рассылок:</span>
+        <span class="highlight">{{ all_messages | length }}</span>
     </div>
 
-    <div class="my-custom-background">
-        <svg viewBox="0 0 3000 300">
-            <symbol id="s-text">
-                <text text-anchor="middle" x="50%" y="50%" dy=".35em">Статьи из нашего блога</text>
-            </symbol>
-            <use class="text" xlink:href="#s-text"></use>
-            <use class="text" xlink:href="#s-text"></use>
-            <use class="text" xlink:href="#s-text"></use>
-            <use class="text" xlink:href="#s-text"></use>
-            <use class="text" xlink:href="#s-text"></use>
-        </svg>
+    <div class="styled-text">
+        <span>В данный момент активных рассылок:</span>
+        <span class="highlight">{{ active_messages | length }}</span>
+    </div>
+
+    <div class="styled-text">
+        <span>Мы рассылаем наши рассылки для стольких клиентов:</span>
+        <span class="highlight">{{ all_clients | length }}</span>
+    </div>
+
+    <div class="mb-4"></div>
+    <div class="styled-text-article">
+        <span class="highlight">Статьи из нашего блога</span>
     </div>
 
     <div class="d-flex flex-wrap">

@@ -22,6 +22,14 @@ class LoginView(BaseLoginView):
         'title': 'Log in to account'
     }
 
+    def form_valid(self, form):
+        """
+        Создаем сообщение об успешной авторизации на сайте
+        """
+        response = super().form_valid(form)
+        messages.success(self.request, 'Вы успешно авторизовались')
+        return response
+
 
 class LogoutView(BaseLogoutView):
     pass
