@@ -1,0 +1,56 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="col-12">
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Профиль {{ object.first_name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            {% csrf_token %}
+                            <div>
+                                {{ form.as_p }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Обновить данные</button>
+                        </div>
+
+                        <div class="card-footer">
+                            <a href="{% url 'users:generate_new_password' %}" class="btn btn-danger">Сгенерировать
+                                новый
+                                пароль</a>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'users:profile_delete' object.pk %}" class="btn btn-danger">Удалить аккаунт</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                {% if not user.is_staff %}
+                    <div class="col-12 col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Доступный функционал</h5>
+                            </div>
+                            <div class="card-body">
+                                <a class="p-2 btn btn-outline-primary" href="{% url 'client:client_list' %}">Клиенты
+                                    сервиса</a>
+                                <a class="p-2 btn btn-outline-primary"
+                                   href="{% url 'newsletter:message_list' %}">Мои рассылки</a>
+                                <a class="p-2 btn btn-outline-primary" href="{% url 'newsletter:report_list' %}">Отчет
+                                    по
+                                    рассылкам</a>
+                            </div>
+                            <div class="card-footer">
+                                Управляйте рассылками и просматривайте клиентов, смотрите отчеты
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

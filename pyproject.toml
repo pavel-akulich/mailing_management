@@ -9,6 +9,11 @@ packages = [{include = "mailling_management"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "^4.2.6"
+psycopg2-binary = "^2.9.9"
+django-crontab = "^0.7.1"
+pillow = "^10.1.0"
+python-dotenv = "^1.0.0"
+redis = "^5.0.1"
 
 
 [build-system]

@@ -1,0 +1,35 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-12 text-center mb-4">
+                <h1>Добро пожаловать в инструментарий менеджера &#128736;</h1>
+            </div>
+            <div class="card col-5 mb-2 mx-auto">
+                <h6>Отредактировать личные данные</h6>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'users:profile_edit' %}">К профилю</a>
+            </div>
+            <div class="card col-5 mb-2 mx-auto">
+                <h6>Посмотреть всех пользователей сервиса</h6>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'users:users_list' %}">К пользователям</a>
+            </div>
+            <div class="card col-5 mb-2 mx-auto">
+                <h6>Посмотреть все рассылки</h6>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'newsletter:message_list' %}">К рассылкам</a>
+            </div>
+            <div class="card col-5 mb-2 mx-auto">
+                <h6>Отчет(логи) рассылок</h6>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'newsletter:report_list' %}">К логам</a>
+            </div>
+            <div class="card col-5 mb-2 mx-auto">
+                <h6>Посмотреть всех клиентов сервиса</h6>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'client:client_list' %}">К клиентам</a>
+            </div>
+            <div class="card col-5 mb-2 mx-auto">
+                <h6>Перейти в административную панель</h6>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'admin:index' %}">К админке</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
