@@ -71,6 +71,7 @@ The project consists of the following components:
       - Cannot manage the mailing list
       - Cannot change mailings and messages
    - The content manager has full rights to work with the CRUD mechanism of the blog
+   - [Instruction with photos](https://drive.google.com/drive/folders/1vxBrn6-L6hmDqpilBML8Oqkayf8_Oo8C)
 
 ## Notes
    - The project was developed as an educational assignment and can be further enhanced and expanded for broader use

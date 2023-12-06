@@ -103,7 +103,10 @@ class MailingLogsListView(LoginRequiredMixin, ListView):
         Проверяет, что пользователь является суперпользователем или имеет право просматривать все рассылки(персонал),
         тогда отобразит все рассылки, в ином случае фильтруем по владельцу и отображаем только его логи
         """
+        order_by = self.request.GET.get('order_by', '-datetime_attempt')
+
         if self.request.user.is_superuser or self.request.user.is_staff:
-            return MailingLogs.objects.all()
+            return MailingLogs.objects.all().order_by(order_by)
         else:
-            return MailingLogs.objects.filter(message__owner=self.request.user)
+            return MailingLogs.objects.filter(message__owner=self.request.user).order_by(order_by)
+
