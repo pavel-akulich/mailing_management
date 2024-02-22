@@ -5,6 +5,16 @@ from users.models import User
 
 
 class UserRegisterForm(UserCreationForm):
+    """
+    Form for registering a new user.
+
+    Attributes:
+        password1 (CharField): The first password input field.
+        password2 (CharField): The second password input field for confirmation.
+        model (Model): The model associated with the form.
+        fields (tuple): The fields to be included in the form.
+        widgets (dict): Custom widgets for the form fields.
+    """
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Впишите пароль'}),
         label='Пароль')
@@ -13,6 +23,9 @@ class UserRegisterForm(UserCreationForm):
         label='Повторите пароль')
 
     class Meta:
+        """
+        Meta_class configuration for the UserRegisterForm.
+        """
         model = User
         fields = ('email', 'password1', 'password2',)
 
@@ -22,7 +35,19 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserForm(UserChangeForm):
+    """
+    Form for updating user information.
+
+    Attributes:
+        model (Model): The model associated with the form.
+        fields (tuple): The fields to be included in the form.
+        widgets (dict): Custom widgets for the form fields.
+    """
+
     class Meta:
+        """
+        Meta_class configuration for the UserForm.
+        """
         model = User
         fields = ('email', 'password', 'first_name', 'last_name', 'avatar', 'phone', 'country',)
 
@@ -42,4 +67,11 @@ class UserForm(UserChangeForm):
 
 
 class VerificationForm(forms.Form):
+    """
+    Form for verification code input.
+
+    Attributes:
+        verify_code (CharField): The field for entering the verification code.
+    """
+
     verify_code = forms.CharField(max_length=12, label='Введите код верификации')

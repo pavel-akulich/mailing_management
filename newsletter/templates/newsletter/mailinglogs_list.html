@@ -30,7 +30,7 @@
                     {% endif %}
                 </td>
                 <td>{{ object.datetime_attempt }}</td>
-                <td style="color: {% if object.status == 'Ошибка отправки' %}red{% elif object.status == 'Успешно отправлено' %}green{% else %}black{% endif %}">
+                <td style="color: {% if object.status == 'Sending error' %}red{% elif object.status == 'Successfully sent' %}green{% else %}black{% endif %}">
                     {{ object.status }}
                 </td>
                 <td>{{ object.server_response }}</td>

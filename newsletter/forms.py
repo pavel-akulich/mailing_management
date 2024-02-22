@@ -5,6 +5,13 @@ from newsletter.validators import validate_even
 
 
 class MessageForm(forms.ModelForm):
+    """
+    Form for creating or updating a message.
+
+    Attributes:
+        title (CharField): Title of the message.
+        body (CharField): Body of the message.
+    """
     title = forms.CharField(validators=[validate_even],
                             label='Название рассылки',
                             widget=forms.TextInput(
@@ -24,6 +31,9 @@ class MessageForm(forms.ModelForm):
                            ))
 
     class Meta:
+        """
+        Meta_class configuration for the MessageForm.
+        """
         model = Message
         fields = ('client', 'title', 'body', 'mailing_settings',)
         widgets = {

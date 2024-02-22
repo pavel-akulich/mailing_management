@@ -8,7 +8,12 @@ from newsletter.models import Message, MailingLogs
 
 class MessageListView(LoginRequiredMixin, ListView):
     """
-    Контроллер отображения списка рассылок
+    View for displaying the list of messages.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        ordering (tuple): The default ordering for the queryset.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Message
     ordering = ('title',)
@@ -19,7 +24,11 @@ class MessageListView(LoginRequiredMixin, ListView):
 
 class MessageDetailView(LoginRequiredMixin, DetailView):
     """
-    Контроллер для детального просмотра рассылки
+    View for detailed view of a message.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Message
     extra_context = {
@@ -29,7 +38,13 @@ class MessageDetailView(LoginRequiredMixin, DetailView):
 
 class MessageCreateView(LoginRequiredMixin, CreateView):
     """
-    Контроллер для создания рассылки
+    View for creating a message.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        form_class (Form): The form class used for the view.
+        success_url (str): The URL to redirect to after successful form submission.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Message
     form_class = MessageForm
@@ -41,7 +56,7 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """
-        Присваивает текущего пользователя владельцем сообщения
+        Assigns the current user as the owner of the message.
         """
         form.instance.owner = self.request.user
         return super().form_valid(form)
@@ -49,7 +64,12 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
 
 class MessageUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """
-    Контроллер для редактирования рассылки
+    View for updating a message.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        form_class (Form): The form class used for the view.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Message
     form_class = MessageForm
@@ -60,20 +80,25 @@ class MessageUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         """
-        В случае успеха делает редирект на детальный просмотр рассылки
+        Redirects to the detailed view of the message upon success.
         """
         return reverse('newsletter:message_detail', args=[self.kwargs.get('pk')])
 
     def test_func(self):
         """
-        Проверяет, имеет ли пользователь права владельца рассылки или является ли он суперпользователем
+        Checks whether the user has the rights of the message owner or is a superuser.
         """
         return self.request.user == self.get_object().owner or self.request.user.is_superuser
 
 
 class MessageDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """
-    Контроллер для удаления рассылки
+    View for deleting a message.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        success_url (str): The URL to redirect to after successful deletion.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Message
     success_url = reverse_lazy('newsletter:message_list')
@@ -84,14 +109,18 @@ class MessageDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         """
-        Проверяет, имеет ли пользователь права владельца рассылки или является ли он суперпользователем
+        Checks whether the user has the rights of the message owner or is a superuser.
         """
         return self.request.user == self.get_object().owner or self.request.user.is_superuser
 
 
 class MailingLogsListView(LoginRequiredMixin, ListView):
     """
-    Контроллер для просмотра логов рассылки
+    View for viewing mailing logs.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = MailingLogs
     extra_context = {
@@ -100,8 +129,8 @@ class MailingLogsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """
-        Проверяет, что пользователь является суперпользователем или имеет право просматривать все рассылки(персонал),
-        тогда отобразит все рассылки, в ином случае фильтруем по владельцу и отображаем только его логи
+        Checks if the user is a superuser or has the right to view all mailings (staff),
+        then displays all mailings, otherwise filters by owner and displays only their logs.
         """
         order_by = self.request.GET.get('order_by', '-datetime_attempt')
 
@@ -109,4 +138,3 @@ class MailingLogsListView(LoginRequiredMixin, ListView):
             return MailingLogs.objects.all().order_by(order_by)
         else:
             return MailingLogs.objects.filter(message__owner=self.request.user).order_by(order_by)
-
