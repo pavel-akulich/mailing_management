@@ -7,7 +7,11 @@ from newsletter.models import Message
 
 class HomeView(TemplateView):
     """
-    Контроллер отображения домашней страницы
+    View for the home page.
+
+    Attributes:
+        template_name (str): The name of the template used for rendering the view.
+        extra_context (dict): Additional context data for the view.
     """
     template_name = 'home/home.html'
     extra_context = {
@@ -15,6 +19,12 @@ class HomeView(TemplateView):
     }
 
     def get_context_data(self, **kwargs):
+        """
+        Get additional context data.
+
+        Returns:
+            dict: Context data for the view.
+        """
         context_data = super().get_context_data(**kwargs)
         context_data['all_messages'] = Message.objects.all()
         context_data['active_messages'] = Message.objects.filter(is_active=True)

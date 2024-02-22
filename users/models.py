@@ -5,6 +5,16 @@ from service_client.models import NULLABLE
 
 
 class User(AbstractUser):
+    """
+    Custom user model representing a user of the system.
+
+    Attributes:
+        email (EmailField): The email address of the user.
+        avatar (ImageField): The avatar image of the user.
+        phone (CharField): The phone number of the user.
+        country (CharField): The country of the user.
+        verify_code (CharField): The verification code of the user.
+    """
     username = None
 
     email = models.EmailField(unique=True, verbose_name='email')

@@ -17,6 +17,9 @@ from users.models import User
 
 
 class LoginView(BaseLoginView):
+    """
+    View for user login.
+    """
     template_name = 'users/login.html'
     extra_context = {
         'title': 'Log in to account'
@@ -24,7 +27,7 @@ class LoginView(BaseLoginView):
 
     def form_valid(self, form):
         """
-        Создаем сообщение об успешной авторизации на сайте
+        Creates a success message about successful login.
         """
         response = super().form_valid(form)
         messages.success(self.request, 'Вы успешно авторизовались')
@@ -37,7 +40,7 @@ class LogoutView(BaseLogoutView):
 
 class RegisterView(CreateView):
     """
-    Контроллер для регистрации пользователя
+    View for user registration.
     """
     model = User
     extra_context = {
@@ -49,10 +52,9 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         """
-        Обработчик, вызываемый при успешной валидации формы.
-        Создает нового пользователя, устанавливает его статус активации в False и генерирует
-        уникальный код верификации. Сохраняет пользователя и отправляет письмо с кодом верификации
-        на адрес электронной почты пользователя.
+        Handler called when form is successfully validated.
+        Creates a new user, sets their activation status to False, generates a unique verification code,
+        saves the user, and sends an email with the verification code to the user's email address.
         """
         user = form.save(commit=False)
         user.is_active = False
@@ -60,7 +62,7 @@ class RegisterView(CreateView):
         user.verify_code = generate_code
         user.save()
 
-        # Отправляем письмо с кодом активации
+        # Sending an email with the activation code
         send_mail(
             subject='Код верификации',
             message=f'Пожалуйста, для вашей верификации и активации аккаунта введите код: {generate_code}',
@@ -72,7 +74,7 @@ class RegisterView(CreateView):
 
 class UserVerifyView(View):
     """
-    Контроллер для верификации пользователя при регистрации
+    View for user verification during registration.
     """
     template_name = 'users/verification.html'
     extra_context = {
@@ -85,7 +87,7 @@ class UserVerifyView(View):
 
     def post(self, request, *args, **kwargs):
         """
-        Сверяет, чтобы введённый код совпадал с тем, который отправлен пользователю на почту для верификации
+        Compares the entered code with the one sent to the user's email for verification.
         """
         form = VerificationForm(request.POST)
         if form.is_valid():
@@ -106,7 +108,7 @@ class UserVerifyView(View):
 
 class UserListView(UserPassesTestMixin, ListView):
     """
-    Контроллер для отображения списка пользователей
+    View for displaying the list of users.
     """
     model = User
     extra_context = {
@@ -114,24 +116,27 @@ class UserListView(UserPassesTestMixin, ListView):
     }
 
     def test_func(self):
+        """
+        Checks whether the user has manager rights or is a superuser.
+        """
         return self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser
 
 
 class GenerateNewPasswordView(View):
     """
-    Контроллер для генерации нового пароля
+    View for generating a new password.
     """
 
     def generate_random_password(self, length=12):
         """
-        Генерирует новый рандомный пароль
+        Generates a new random password.
         """
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for _ in range(length))
 
     def get(self, request, *args, **kwargs):
         new_password = self.generate_random_password()
-        # Отправляем письмо с новым паролем
+        # Send email with the new password
         send_mail(
             subject='Password reset',
             message=f'Your new password: {new_password}\n'
@@ -146,7 +151,7 @@ class GenerateNewPasswordView(View):
 
 class UserUpdateView(UpdateView):
     """
-    Контроллер для редактирования данных пользователя
+    View for editing user data.
     """
     model = User
     extra_context = {
@@ -161,7 +166,7 @@ class UserUpdateView(UpdateView):
 
 class UserDeleteView(DeleteView):
     """
-    Контроллер для удаления пользователя
+    View for deleting a user.
     """
     model = User
     success_url = reverse_lazy('home:home')
@@ -172,7 +177,7 @@ class UserDeleteView(DeleteView):
 
 class ManagerView(UserPassesTestMixin, View):
     """
-    Контроллер для интерфейса менеджера
+    View for the manager interface.
     """
     template_name = 'users/manager.html'
 
@@ -183,12 +188,15 @@ class ManagerView(UserPassesTestMixin, View):
         return render(request, self.template_name, context)
 
     def test_func(self):
+        """
+         Checks if the user has manager rights or is a superuser.
+         """
         return self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser
 
 
 class DisableUserView(UserPassesTestMixin, View):
     """
-    Контроллер для деактивации(блокировки) либо активации пользователя
+    View for deactivating (blocking) or activating a user.
     """
 
     def get(self, request, pk):
@@ -203,12 +211,15 @@ class DisableUserView(UserPassesTestMixin, View):
         return redirect('users:users_list')
 
     def test_func(self):
+        """
+        Checks if the user has manager rights or is a superuser.
+        """
         return self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser
 
 
 class DisableMessageView(UserPassesTestMixin, View):
     """
-    Контроллер для отключения/включения рассылки
+    View for disabling/enabling a message.
     """
 
     def get(self, request, pk):
@@ -224,6 +235,6 @@ class DisableMessageView(UserPassesTestMixin, View):
 
     def test_func(self):
         """
-        Проверяет, имеет ли пользователь права менеджера или является ли он суперпользователем
+        Checks if the user has manager rights or is a superuser.
         """
         return self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser

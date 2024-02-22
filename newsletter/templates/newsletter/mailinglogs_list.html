@@ -1,6 +1,11 @@
 {% extends 'home/base.html' %}
 
 {% block content %}
+    <div class="mb-3">
+        <a href="?order_by=datetime_attempt" class="btn btn-secondary">Сначала старые</a>
+        <a href="?order_by=-datetime_attempt" class="btn btn-secondary">Сначала новые</a>
+    </div>
+
     <table class="table table-hover">
         <caption class="caption-top">Отчет проведенных рассылок</caption>
         <thead class="table-secondary">
@@ -25,7 +30,7 @@
                     {% endif %}
                 </td>
                 <td>{{ object.datetime_attempt }}</td>
-                <td style="color: {% if object.status == 'Ошибка отправки' %}red{% elif object.status == 'Успешно отправлено' %}green{% else %}black{% endif %}">
+                <td style="color: {% if object.status == 'Sending error' %}red{% elif object.status == 'Successfully sent' %}green{% else %}black{% endif %}">
                     {{ object.status }}
                 </td>
                 <td>{{ object.server_response }}</td>

@@ -8,7 +8,13 @@ from service_client.models import Client
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
     """
-    Контроллер для создания клиента
+    View for creating a client.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        form_class (Form): The form class used for the view.
+        success_url (str): The URL to redirect to after successful creation.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Client
     form_class = ClientForm
@@ -21,7 +27,12 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
 class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """
-    Контроллер для редактирования клиента
+    View for updating a client.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        form_class (Form): The form class used for the view.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Client
     form_class = ClientForm
@@ -31,18 +42,26 @@ class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     }
 
     def get_success_url(self):
+        """
+        Redirects to the detailed view of the client upon success.
+        """
         return reverse('client:client_view', args=[self.kwargs.get('pk')])
 
     def test_func(self):
         """
-        Проверяет, имеет ли пользователь права менеджера или является ли он суперпользователем
+        Checks whether the user has manager rights or is a superuser.
         """
         return self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser
 
 
 class ClientListView(LoginRequiredMixin, ListView):
     """
-    Контроллер для просмотра списка всех клиентов
+    View for listing all clients.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        ordering (tuple): The default ordering for the queryset.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Client
     ordering = ('last_name',)
@@ -53,7 +72,11 @@ class ClientListView(LoginRequiredMixin, ListView):
 
 class ClientDetailView(LoginRequiredMixin, DetailView):
     """
-    Контроллер для просмотра деталей клиента
+    View for detailed view of a client.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Client
     extra_context = {
@@ -63,7 +86,12 @@ class ClientDetailView(LoginRequiredMixin, DetailView):
 
 class ClientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """
-    Контроллер для удаления клиента
+    View for deleting a client.
+
+    Attributes:
+        model (Model): The model associated with the view.
+        success_url (str): The URL to redirect to after successful deletion.
+        extra_context (dict): Extra context data to be included in the view.
     """
     model = Client
     success_url = reverse_lazy('client:client_list')
@@ -74,6 +102,6 @@ class ClientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         """
-        Проверяет, имеет ли пользователь права менеджера или является ли он суперпользователем
+        Checks whether the user has manager rights or is a superuser.
         """
         return self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser

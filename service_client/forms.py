@@ -4,7 +4,20 @@ from service_client.models import Client
 
 
 class ClientForm(forms.ModelForm):
+    """
+    Form for creating or updating a client.
+
+    Attributes:
+        model (Model): The model associated with the form.
+        fields (tuple): The fields to be included in the form.
+        widgets (dict): Custom widgets for the form fields.
+        labels (dict): Custom labels for the form fields.
+    """
+
     class Meta:
+        """
+        Meta_class configuration for the ClientForm.
+        """
         model = Client
         fields = ('first_name', 'last_name', 'patronymic', 'email', 'comment')
         widgets = {

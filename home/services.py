@@ -4,20 +4,23 @@ from service_client.models import Client
 
 def get_cached_clients():
     """
-    Функция для кэширования количества клиентов на главной странице
+    Function to cache the number of clients on the homepage.
+
+    Returns:
+        QuerySet: QuerySet containing Client objects.
     """
-    # Создаем ключ для кэширования клиентов
+    # Create a key for caching clients
     client_cache_key = 'clients_data_cache'
     cached_clients = cache.get(client_cache_key)
 
     if cached_clients:
-        # Если данные есть в кэше, используем их
+        # If data is in cache, use it
         return cached_clients
     else:
-        # Если данных нет в кэше, выполняем запрос к базе данных
+        # If data is not in cache, perform a database query
         clients = Client.objects.all()
 
-        # Сохраняем результат запроса в кэше на определенное время(в моем случае 30 сек)
+        # Save the query result in the cache for a certain time (in this case, 30 seconds)
         cache.set(client_cache_key, clients, 30)
 
         return clients

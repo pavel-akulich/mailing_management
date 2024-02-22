@@ -7,7 +7,11 @@ from blog.models import Blog
 
 class BlogListView(LoginRequiredMixin, ListView):
     """
-    Контроллер для отображения всех(списка) статей блога
+    View for displaying a list of blog posts.
+
+    Attributes:
+        model (Blog): The model used for the view.
+        extra_context (dict): Additional context data for the view.
     """
     model = Blog
     extra_context = {
@@ -15,6 +19,12 @@ class BlogListView(LoginRequiredMixin, ListView):
     }
 
     def get_context_data(self, **kwargs):
+        """
+        Get additional context data.
+
+        Returns:
+            dict: Context data for the view.
+        """
         context = super().get_context_data(**kwargs)
         user = self.request.user
         context['content_manager'] = user.groups.filter(name='content_manager').exists() or user.is_superuser
@@ -23,7 +33,13 @@ class BlogListView(LoginRequiredMixin, ListView):
 
 class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """
-    Контроллер для создания статей блога
+    View for creating a new blog post.
+
+    Attributes:
+        model (Blog): The model used for the view.
+        fields (tuple): Fields to be displayed in the form.
+        success_url (str): URL to redirect to upon successful form submission.
+        extra_context (dict): Additional context data for the view.
     """
     model = Blog
     fields = ('title', 'content', 'preview')
@@ -34,14 +50,21 @@ class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def test_func(self):
         """
-        Проверяет, имеет ли пользователь права контент-менеджера или является ли он суперпользователем
+        Check if the user has the permissions to access the view.
+
+        Returns:
+            bool: True if the user has access rights, False otherwise.
         """
         return self.request.user.groups.filter(name='content_manager').exists() or self.request.user.is_superuser
 
 
 class BlogDetailView(LoginRequiredMixin, DetailView):
     """
-    Контроллер для детального отображения статей блога
+    View for displaying details of a blog post.
+
+    Attributes:
+        model (Blog): The model used for the view.
+        extra_context (dict): Additional context data for the view.
     """
     model = Blog
     extra_context = {
@@ -50,7 +73,10 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         """
-        Получает объект из запроса и увеличивает счетчик просмотров
+        Get the blog post object. Increases the number of article views.
+
+        Returns:
+            Blog: The blog post object.
         """
         self.object = super().get_object(queryset)
         self.object.views_count += 1
@@ -60,7 +86,13 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
 
 class BlogUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """
-    Контроллер для редактирования статей блога
+    View for updating a blog post.
+
+    Attributes:
+        model (Blog): The model used for the view.
+        fields (tuple): Fields to be displayed in the form.
+        success_url (str): URL to redirect to upon successful form submission.
+        extra_context (dict): Additional context data for the view.
     """
     model = Blog
     fields = ('title', 'content', 'preview')
@@ -71,17 +103,31 @@ class BlogUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         """
-        В случае успешного редактирования объекта сделает редирект на детальный просмотр этого объекта
+        Get the URL to redirect to after successful form submission.
+
+        Returns:
+            str: The redirect URL.
         """
         return reverse('blog:blog_detail', args=[self.kwargs.get('pk')])
 
     def test_func(self):
+        """
+        Check if the user has the permissions to access the view.
+
+        Returns:
+            bool: True if the user has access rights, False otherwise.
+        """
         return self.request.user.groups.filter(name='content_manager').exists() or self.request.user.is_superuser
 
 
 class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """
-    Контроллер для удаления статей блога
+    View for deleting a blog post.
+
+    Attributes:
+        model (Blog): The model used for the view.
+        success_url (str): URL to redirect to upon successful deletion.
+        extra_context (dict): Additional context data for the view.
     """
     model = Blog
     success_url = reverse_lazy('blog:blog_list')
@@ -90,4 +136,10 @@ class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     }
 
     def test_func(self):
+        """
+        Check if the user has the permissions to access the view.
+
+        Returns:
+            bool: True if the user has access rights, False otherwise.
+        """
         return self.request.user.groups.filter(name='content_manager').exists() or self.request.user.is_superuser
