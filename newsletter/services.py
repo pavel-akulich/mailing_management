@@ -19,6 +19,8 @@ def send_newsletter():
     current_date = datetime.now().date()
     current_time = datetime.now().time()
 
+    messages_to_update = []
+
     for message in messages:
         if message.mailing_settings.send_time.time() <= current_time and message.mailing_settings.send_time.date() == current_date:
 
@@ -30,14 +32,8 @@ def send_newsletter():
             try:
                 send_mail(subject, message_body, from_email, recipient_list, fail_silently=False)
 
-                # After the newsletter, we redefine the date settings for the next newsletter
-                if message.mailing_settings.frequency == 'Daily':
-                    message.mailing_settings.send_time += timedelta(days=1)
-                elif message.mailing_settings.frequency == 'Weekly':
-                    message.mailing_settings.send_time += timedelta(days=7)
-                elif message.mailing_settings.frequency == 'Monthly':
-                    message.mailing_settings.send_time += timedelta(days=30)
-                message.mailing_settings.save()
+                # Add message to the list to update after sending
+                messages_to_update.append(message)
 
                 # Save the log entry after successful sending
                 MailingLogs.objects.create(
@@ -51,3 +47,13 @@ def send_newsletter():
                     status='Sending error',
                     server_response=str(e)
                 )
+
+    # Updating the sending time for the next mailing
+    for message in messages_to_update:
+        if message.mailing_settings.frequency == 'Daily':
+            message.mailing_settings.send_time += timedelta(days=1)
+        elif message.mailing_settings.frequency == 'Weekly':
+            message.mailing_settings.send_time += timedelta(weeks=1)
+        elif message.mailing_settings.frequency == 'Monthly':
+            message.mailing_settings.send_time += timedelta(days=30)
+        message.mailing_settings.save()
